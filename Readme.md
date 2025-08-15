@@ -36,7 +36,7 @@ Projeto para fins educacionais e demonstração de técnicas de classificação 
 ## Estrutura dos arquivos
 
 - `carros.py`: Código principal da aplicação
-- `carros.csv` ou `carros_traduzido.csv`: Dataset de veículos
+- `carros.csv`: Dataset de veículos
 - `Readme.md`: Este arquivo de documentação
 
 ## Sobre o Dataset
