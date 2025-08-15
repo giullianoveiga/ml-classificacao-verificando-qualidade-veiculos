@@ -49,7 +49,7 @@ def load_data_and_model():
 modelo, encoder, acuracia, carros = load_data_and_model()
 
 # Cria abas para navegação
-tab1, tab2, tab3 = st.tabs(["Classificação", "Explicabilidade", "Documentação"])
+tab1, tab2, tab3, tab4 = st.tabs(["Classificação", "Explicabilidade", "Documentação", "Desenvolvedor"])
 
 
 
@@ -66,15 +66,15 @@ with tab1:
     col1, col2 = st.columns(2)
     with col1:
         input_features = {
-            "preco": st.selectbox("Preço", options=carros['preco'].unique()),
-            "manutencao": st.selectbox("Manutenção", options=carros['manutencao'].unique()),
-            "portas": st.selectbox("Número de portas", options=carros['portas'].unique()),
+            "preco": st.selectbox("Preço", options=carros['preco'].unique(), help="Faixa de preço do veículo (ex: baixo, alto, muito_alto)"),
+            "manutencao": st.selectbox("Manutenção", options=carros['manutencao'].unique(), help="Custo de manutenção do veículo (ex: baixa, alta, muito_alto)"),
+            "portas": st.selectbox("Número de portas", options=carros['portas'].unique(), help="Quantidade de portas do veículo (ex: 2, 3, 4, 5_ou_mais)"),
         }
     with col2:
         input_features.update({
-            "pessoas": st.selectbox("Capacidade de Passageiros", options=carros['pessoas'].unique()),
-            "porta_malas": st.selectbox("Capacidade do porta-malas", options=carros['porta_malas'].unique()),
-            "seguranca": st.selectbox("Segurança", options=carros['seguranca'].unique())
+            "pessoas": st.selectbox("Capacidade de Passageiros", options=carros['pessoas'].unique(), help="Número de pessoas que o veículo comporta (ex: 2, 4, mais)"),
+            "porta_malas": st.selectbox("Capacidade do porta-malas", options=carros['porta_malas'].unique(), help="Tamanho do porta-malas (ex: pequeno, médio, grande)"),
+            "seguranca": st.selectbox("Segurança", options=carros['seguranca'].unique(), help="Nível de segurança do veículo (ex: baixa, média, alta)")
         })
     if st.button("Processar"):
         input_df = pd.DataFrame([input_features], columns=carros.columns.drop('classe'))
@@ -94,16 +94,26 @@ with tab2:
     cols = list(carros.columns.drop('classe'))
     grid = [st.columns(2) for _ in range(4)]
     idx = 0
+    explicacoes = {
+        "preco": "Faixa de preço do veículo.",
+        "manutencao": "Custo de manutenção do veículo.",
+        "portas": "Quantidade de portas do veículo.",
+        "pessoas": "Número de pessoas que o veículo comporta.",
+        "porta_malas": "Tamanho do porta-malas.",
+        "seguranca": "Nível de segurança do veículo."
+    }
     for row in grid:
         for col_box in row:
             if idx < len(cols):
                 col_name = cols[idx]
                 with col_box:
                     st.write(f"Distribuição de '{col_name}' por classe:")
+                    st.caption(explicacoes.get(col_name, ""))
                     fig, ax = plt.subplots(figsize=(6, 3))
                     sns.countplot(x=col_name, hue='classe', data=carros, ax=ax)
                     st.pyplot(fig)
                 idx += 1
+
 
 # Aba 3: Documentação
 with tab3:
@@ -117,3 +127,15 @@ with tab3:
     st.write("**Sobre o Dataset:**")
     st.write("O dataset contém informações categóricas sobre veículos, como preço, manutenção, número de portas, capacidade de passageiros, tamanho do porta-malas e segurança. A variável alvo é a qualidade do veículo ('class').")
     st.dataframe(carros.head())
+
+# Aba 4: Desenvolvedor
+with tab4:
+    st.subheader("Sobre o Desenvolvedor")
+    st.markdown("""
+    **Giulliano Veiga**  
+    Cientista de Dados  
+    WhatsApp: [+55 85 98170-8027](https://wa.me/5585981708027)  
+    Instagram: [@giullianoveiga](https://instagram.com/giullianoveiga)  
+    GitHub: [giullianoveiga](https://github.com/giullianoveiga)  
+    LinkedIn: [Giulliano Veiga](https://www.linkedin.com/in/giulliano-veiga/)
+    """)
